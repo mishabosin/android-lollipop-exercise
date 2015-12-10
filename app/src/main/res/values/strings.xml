@@ -6,4 +6,8 @@
     <string name="contact_added">Contact added</string>
     <string name="undo">Undo</string>
 
+    <string name="transition_profile">profile</string>
+    <string name="transition_name">name</string>
+    <string name="transition_palette">palette</string>
+
 </resources>

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -113,12 +115,15 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
                     final Contact contact = (Contact)v.getTag();
                     if (contact != null) {
                         // Fire an intent when a contact is selected
-                        // Pass contact object in the bundle and populate details activity.
-
-                        // first parameter is the context, second is the class of the activity to launch
                         Intent i = new Intent(context, DetailsActivity.class);
                         i.putExtra(EXTRA_CONTACT, contact);
-                        itemView.getContext().startActivity(i);
+
+                        Pair<View, String> p1 = Pair.create((View)ivProfile, "profile");
+                        Pair<View, String> p2 = Pair.create(vPalette, "palette");
+                        Pair<View, String> p3 = Pair.create((View) tvName, "text");
+                        ActivityOptionsCompat options = ActivityOptionsCompat.
+                                makeSceneTransitionAnimation((Activity) context, p1, p2, p3);
+                        context.startActivity(i, options.toBundle());
                     }
                 }
             });

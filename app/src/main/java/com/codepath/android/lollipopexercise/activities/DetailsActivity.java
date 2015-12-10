@@ -41,7 +41,8 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        this.supportFinishAfterTransition();
+        return true;
     }
 
 }

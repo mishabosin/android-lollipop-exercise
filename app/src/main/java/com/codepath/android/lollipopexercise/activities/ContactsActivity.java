@@ -65,6 +65,10 @@ public class ContactsActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
             case R.id.miAdd:
                 addContact();
                 return true;
