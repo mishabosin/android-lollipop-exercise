@@ -1,12 +1,16 @@
 package com.codepath.android.lollipopexercise.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Transition;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 public class DetailsActivity extends AppCompatActivity {
     public static final String EXTRA_CONTACT = "EXTRA_CONTACT";
+    Transition.TransitionListener mEnterTransitionListener;
     private FloatingActionButton fab;
     private Contact mContact;
     private ImageView ivProfile;
@@ -42,7 +47,39 @@ public class DetailsActivity extends AppCompatActivity {
         tvName.setText(mContact.getName());
         tvPhone.setText(mContact.getNumber());
 
+        initTransitionListener();
         initFab();
+
+        getWindow().getEnterTransition().addListener(mEnterTransitionListener);
+    }
+
+    private void initTransitionListener() {
+        mEnterTransitionListener = new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                enterReveal();
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        };
     }
 
     private void initFab() {
@@ -59,13 +96,86 @@ public class DetailsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        fab.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        this.supportFinishAfterTransition();
+        exitReveal();
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        exitReveal();
+    }
+
+    void enterReveal() {
+        // get the center for the clipping circle
+        int cx = fab.getMeasuredWidth() / 2;
+        int cy = fab.getMeasuredHeight() / 2;
+
+        // get the final radius for the clipping circle
+        int finalRadius = Math.max(fab.getWidth(), fab.getHeight()) / 2;
+
+        // create the animator for this view (the start radius is zero)
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(fab, cx, cy, 0, finalRadius);
+
+        // make the view visible and start the animation
+        fab.setVisibility(View.VISIBLE);
+
+        // This is done to disable reveal animation when the activity ends.
+        anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                getWindow().getEnterTransition().removeListener(mEnterTransitionListener);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        anim.start();
+    }
+
+    void exitReveal() {
+        // get the center for the clipping circle
+        int cx = fab.getMeasuredWidth() / 2;
+        int cy = fab.getMeasuredHeight() / 2;
+
+        // get the initial radius for the clipping circle
+        int initialRadius = fab.getWidth() / 2;
+
+        // create the animation (the final radius is zero)
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(fab, cx, cy, initialRadius, 0);
+
+        // make the view invisible when the animation is done
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                fab.setVisibility(View.INVISIBLE);
+
+                // Finish the activity after the exit transition completes.
+                supportFinishAfterTransition();
+            }
+        });
+
+        // start the animation
+        anim.start();
+    }
 }

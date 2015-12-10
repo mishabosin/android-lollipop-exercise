@@ -11,13 +11,9 @@ Android app to use as the base app for implementing the following material widge
 
 The app is composed of two screens. The first screen displays a list of contacts, in which, each item is described by the contact's avatar and name. Once a contact is selected from the list, a second screen appears with additional details about the contact, including his contact no. and a floating action button to place a phone call to this contact.
 
-**Contact List**
+**Completed Assignment**
 
-  ![Screenie|300](http://i.imgur.com/VSbsd4Gl.png)
-
-**Contact Details**
-
-  ![Screenie|300](http://i.imgur.com/NpKJJgdl.png)
+  ![Imgur](http://i.imgur.com/Lz6iKhL.gif)
 
 ## Overview
 
