@@ -1,6 +1,9 @@
 package com.codepath.android.lollipopexercise.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 public class DetailsActivity extends AppCompatActivity {
     public static final String EXTRA_CONTACT = "EXTRA_CONTACT";
+    private FloatingActionButton fab;
     private Contact mContact;
     private ImageView ivProfile;
     private TextView tvName;
@@ -37,6 +41,25 @@ public class DetailsActivity extends AppCompatActivity {
         Picasso.with(DetailsActivity.this).load(mContact.getThumbnailDrawable()).fit().centerCrop().into(ivProfile);
         tvName.setText(mContact.getName());
         tvPhone.setText(mContact.getNumber());
+
+        initFab();
+    }
+
+    private void initFab() {
+        // Extract FAB
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        // Dial contact's number.
+        // This shows the dialer with the number, allowing you to explicitly initiate the call.
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri = "tel:" + mContact.getNumber();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse(uri));
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
