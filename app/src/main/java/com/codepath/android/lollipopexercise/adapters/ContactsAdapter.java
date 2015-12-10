@@ -2,6 +2,7 @@ package com.codepath.android.lollipopexercise.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.android.lollipopexercise.R;
+import com.codepath.android.lollipopexercise.activities.DetailsActivity;
 import com.codepath.android.lollipopexercise.models.Contact;
 import com.squareup.picasso.Picasso;
 
@@ -17,6 +19,7 @@ import java.util.List;
 
 // Provide the underlying view for an individual list item.
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
+    public static final String EXTRA_CONTACT = "EXTRA_CONTACT";
     private Activity mContext;
     private List<Contact> mContacts;
 
@@ -56,7 +59,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
         final TextView tvName;
         final View vPalette;
 
-        public VH(View itemView, final Context context) {
+        public VH(final View itemView, final Context context) {
             super(itemView);
             rootView = itemView;
             ivProfile = (ImageView)itemView.findViewById(R.id.ivProfile);
@@ -71,6 +74,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
                     if (contact != null) {
                         // Fire an intent when a contact is selected
                         // Pass contact object in the bundle and populate details activity.
+
+                        // first parameter is the context, second is the class of the activity to launch
+                        Intent i = new Intent(context, DetailsActivity.class);
+                        i.putExtra(EXTRA_CONTACT, contact);
+                        itemView.getContext().startActivity(i);
                     }
                 }
             });
