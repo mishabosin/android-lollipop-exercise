@@ -1,10 +1,10 @@
 package com.codepath.android.lollipopexercise.models;
 
-import com.codepath.android.lollipopexercise.R;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+
+import com.codepath.android.lollipopexercise.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ public class Contact implements Serializable {
     private String mName;
     private int mThumbnailDrawable;
     private String mNumber;
+    private int bgColor;
 
     public Contact(String name, int thumbnailDrawable, String number) {
         mName = name;
@@ -32,6 +33,14 @@ public class Contact implements Serializable {
 
     public String getNumber() {
         return mNumber;
+    }
+
+    public int getBgColor() {
+        return bgColor;
+    }
+
+    public void setBgColor(int bgColor) {
+        this.bgColor = bgColor;
     }
 
     // Returns a list of contacts

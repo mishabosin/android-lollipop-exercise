@@ -3,6 +3,9 @@ package com.codepath.android.lollipopexercise.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,7 @@ import com.codepath.android.lollipopexercise.R;
 import com.codepath.android.lollipopexercise.activities.DetailsActivity;
 import com.codepath.android.lollipopexercise.models.Contact;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -40,11 +44,47 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.VH> {
 
     // Display data at the specified position
     @Override
-    public void onBindViewHolder(VH holder, int position) {
-        Contact contact = mContacts.get(position);
+    public void onBindViewHolder(final VH holder, int position) {
+        final Contact contact = mContacts.get(position);
         holder.rootView.setTag(contact);
         holder.tvName.setText(contact.getName());
-        Picasso.with(mContext).load(contact.getThumbnailDrawable()).fit().centerCrop().into(holder.ivProfile);
+
+        // Define a listener for image loading
+        Target target = new Target() {
+            // Fires when Picasso finishes loading the bitmap for the target
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                holder.ivProfile.setImageBitmap(bitmap);
+                // May not be optimal (since you're dipping in and out of threads)
+                Palette.from(bitmap).maximumColorCount(20).generate(new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(Palette palette) {
+                        // Get the "vibrant" color swatch based on the bitmap
+                        int vibrant = palette.getVibrantColor(0);
+
+                        // Set the background color of a layout based on the vibrant color
+                        holder.vPalette.setBackgroundColor(vibrant);
+                        contact.setBgColor(vibrant);
+                    }
+                });
+            }
+
+            // Fires if bitmap fails to load
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+
+        // Store the target into the tag for the profile to ensure target isn't garbage collected prematurely
+        holder.ivProfile.setTag(target);
+        // Instruct Picasso to load the bitmap into the target defined above
+        Picasso.with(mContext).load(contact.getThumbnailDrawable()).into(target);
     }
 
     @Override
